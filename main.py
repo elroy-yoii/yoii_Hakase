@@ -3,7 +3,7 @@ import streamlit as st
 from streamlit_chat import message
 import faiss
 from langchain import OpenAI
-from langchain.chains import VectorDBQAWithSourcesChain
+from langchain.chains import RetrievalQAWithSourcesChain
 import pickle
 
 # Load the LangChain.
@@ -13,12 +13,11 @@ with open("faiss_store.pkl", "rb") as f:
     store = pickle.load(f)
 
 store.index = index
-chain = VectorDBQAWithSourcesChain.from_llm(llm=OpenAI(temperature=0), vectorstore=store)
-
+chain = RetrievalQAWithSourcesChain.from_chain_type(OpenAI(temperature=0), chain_type="stuff", retriever=store.as_retriever())
 
 # From here down is all the StreamLit UI.
-st.set_page_config(page_title="Blendle Notion QA Bot", page_icon=":robot:")
-st.header("Blendle Notion QA Bot")
+st.set_page_config(page_title="Yoii Hakase", page_icon=":robot:")
+st.header("Yoii Hakase")
 
 if "generated" not in st.session_state:
     st.session_state["generated"] = []
@@ -26,11 +25,9 @@ if "generated" not in st.session_state:
 if "past" not in st.session_state:
     st.session_state["past"] = []
 
-
 def get_text():
     input_text = st.text_input("You: ", "Hello, how are you?", key="input")
     return input_text
-
 
 user_input = get_text()
 

@@ -6,9 +6,8 @@ from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 import pickle
 
-
 # Here we load in the data in the format that Notion exports it in.
-ps = list(Path("Notion_DB/").glob("**/*.md"))
+ps = list(Path("Yoii_DB/").glob("**/*.md"))
 
 data = []
 sources = []
@@ -27,10 +26,10 @@ for i, d in enumerate(data):
     docs.extend(splits)
     metadatas.extend([{"source": sources[i]}] * len(splits))
 
-
 # Here we create a vector store from the documents and save it to disk.
 store = FAISS.from_texts(docs, OpenAIEmbeddings(), metadatas=metadatas)
 faiss.write_index(store.index, "docs.index")
 store.index = None
 with open("faiss_store.pkl", "wb") as f:
     pickle.dump(store, f)
+
