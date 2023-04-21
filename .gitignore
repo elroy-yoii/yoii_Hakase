@@ -134,3 +134,5 @@ settings.json
 
 # Documents and Folders
 Yoii_DB
+docs.index
+faiss_store.pkl
